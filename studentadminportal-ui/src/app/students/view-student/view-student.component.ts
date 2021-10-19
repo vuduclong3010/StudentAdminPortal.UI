@@ -41,50 +41,51 @@ export class ViewStudentComponent implements OnInit {
 
   genderList: Gender[] = [];
 
+  @ViewChild('studentDetailsForm') studentDetailsForm?: NgForm;
+
   constructor(private readonly studentService: StudentService,
     private readonly router: ActivatedRoute,
     private readonly genderService: GenderService,
     private snackbar: MatSnackBar,
     private router_1: Router) { }
 
-  ngOnInit(): void {
-    this.router.paramMap.subscribe(params => {
-      this.studentId = params.get('id');
+    ngOnInit(): void {
+      this.router.paramMap.subscribe(
+        (params) => {
+          this.studentId = params.get('id');
 
-      if(this.studentId) {
-        if(this.studentId.toLowerCase() == 'Add'.toLowerCase()) {
-          // -> New Student Functionality
-          this.isNewStudent = true;
-          this.header = 'Add New Student';
-          this.setImage();
-        }
-
-        else {
-          // -> Existing  Student Functionality
-          this.isNewStudent = false;
-          this.header = 'Edit Student';
-
-          this.studentService.getStudent(this.studentId)
-          .subscribe(
-            (successResponse) => {
-              this.student = successResponse;
+          if (this.studentId) {
+            if (this.studentId.toLowerCase() === 'Add'.toLowerCase()) {
+              // -> new Student Functionality
+              this.isNewStudent = true;
+              this.header = 'Add New Student';
               this.setImage();
-            },
-            (errorResponse) => {
-              this.setImage();
+            } else {
+              // -> Existing Student Functionality
+              this.isNewStudent = false;
+              this.header = 'Edit Student';
+              this.studentService.getStudent(this.studentId)
+                .subscribe(
+                  (successResponse) => {
+                    this.student = successResponse;
+                    this.setImage();
+                  },
+                  (errorResponse) => {
+                    this.setImage();
+                  }
+                );
             }
-          );
-        }
 
-        this.genderService.getGenderList()
-          .subscribe(
-            (successResponse) => {
-              this.genderList = successResponse;
-            }
-          );
-      }
-    });
-  }
+            this.genderService.getGenderList()
+              .subscribe(
+                (successResponse) => {
+                  this.genderList = successResponse;
+                }
+              );
+          }
+        }
+      );
+    }
 
   onUpdate(): void {
     this.studentService.updateStudent(this.student.id, this.student)
@@ -103,6 +104,7 @@ export class ViewStudentComponent implements OnInit {
 
         (errorResponse) => {
           // Log it
+          console.log(errorResponse);
         }
       )
     // Call Student Service To Update Student
@@ -139,10 +141,6 @@ export class ViewStudentComponent implements OnInit {
         setTimeout(() => {
           this.router_1.navigateByUrl(`students/${successResponse.id}`);
         }, 2000);
-
-        // setTimeout(() => {
-        //   this.router_1.navigateByUrl(`students`);
-        // }, 2000);
       },
 
       (errorResponse) => {
