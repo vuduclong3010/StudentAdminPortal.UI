@@ -14,7 +14,11 @@ export class StudentService {
 
   constructor(private httpClinet : HttpClient) { }
 
-  getStudent(): Observable<any> {
+  getStudents(): Observable<Student[]> {
     return this.httpClinet.get<Student[]>(this.baseApiUrl + '/students');
+  }
+
+  getStudent(studentId: string): Observable<Student> {
+    return this.httpClinet.get<Student>(this.baseApiUrl + '/students/' + studentId);
   }
 }
