@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { GetAllStudentsResponse } from '../models/api-models/get-all-students-response.model';
 import { Student } from '../models/api-models/student.model';
 import { UpdateStudentRequest } from '../models/api-models/update-student-request.model';
+import { AddStudentRequest } from '../models/api-models/add-student-request.model';
 
 
 @Injectable({
@@ -40,5 +41,20 @@ export class StudentService {
 
   deleteStudent(studentId: string): Observable<Student> {
     return this.httpClinet.delete<Student>(this.baseApiUrl + '/students/' + studentId);
+  }
+
+  addStudent(studentRequest: Student): Observable<Student> {
+    const AddStudentRequest: AddStudentRequest = {
+      firstName: studentRequest.firstName,
+      lastName: studentRequest.lastName,
+      dateOfBirth: studentRequest.dateOfBirth,
+      email: studentRequest.email,
+      mobile: studentRequest.mobile,
+      genderId: studentRequest.genderId,
+      physicalAddress: studentRequest.address.physicalAddress,
+      postalAddress: studentRequest.address.postalAddress
+    }
+
+    return this.httpClinet.post<Student>(this.baseApiUrl + '/students/add', AddStudentRequest)
   }
 }
