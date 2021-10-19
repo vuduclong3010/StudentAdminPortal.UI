@@ -57,4 +57,19 @@ export class StudentService {
 
     return this.httpClinet.post<Student>(this.baseApiUrl + '/students/add', AddStudentRequest)
   }
+
+  uploadImage(studentId: string, file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append("profileImage", file);
+
+    return this.httpClinet.post(this.baseApiUrl + '/students/' + studentId + '/upload-image',
+      formData, {
+      responseType: 'text'
+    }
+    );
+  }
+
+  getImagePath(relativePath: string) {
+    return `${this.baseApiUrl}/${relativePath}`;
+  }
 }
